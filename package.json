@@ -1,0 +1,54 @@
+{
+  "name": "porndraw",
+  "version": "1.0.0",
+  "description": "Draw pictures with Pornhub API",
+  "main": "src/script/app.js",
+  "scripts": {
+    "lint": "eslint src/**",
+    "lint:fix": "eslint --fix src/**",
+    "test": "npm run lint",
+    "install": "npm run build:dev",
+    "build:watch": "webpack --watch",
+    "build:dev": "webpack",
+    "build": "NODE_ENV=production webpack -p",
+    "start": "node src/script/server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/MaitreManuel/porndraw.git"
+  },
+  "author": "Trystan Eveno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MaitreManuel/porndraw/issues"
+  },
+  "homepage": "https://github.com/MaitreManuel/porndraw#readme",
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^8.0.3",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.1",
+    "browserify": "^16.1.1",
+    "css-loader": "^0.28.4",
+    "eslint": "^4.12.0",
+    "eslint-plugin-compat": "^2.1.0",
+    "expose-loader": "^0.7.4",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.5",
+    "image-webpack-loader": "^3.3.1",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.19.0",
+    "uglifyjs-webpack-plugin": "^1.2.3",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.8.2",
+    "webpack-monitor": "^1.0.14"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "request": "^2.85.0",
+    "snekfetch": "^3.6.4"
+  }
+}
