@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const request = require('request');
+const puppeteer = require('puppeteer');
 
 const PornHub = require('./Videos');
 // showingCounter
@@ -19,15 +19,25 @@ exports.search = (search, callback) => {
     callback(extract_texts);
   });
 };
-exports.getNbPornHubVideos = () => {
-  let nb = 0;
+exports.getNbPornHubVideos = async () => {
+  // 1 - Créer une instance de navigateur
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
 
-  request('https://fr.pornhub.com/video', (error, response, html) => {
-    console.log(error);
-    console.log(response);
-    if (!error && response.statusCode === 200) {
-      console.log(html);
-    }
-    return nb;
+  // 2 - Naviguer jusqu'à l'URL cible
+  await page.goto('https://fr.pornhub.com/video');
+
+  // 3 - Récupérer les données
+  const result = await page.evaluate(() => {
+    let count = document.querySelector('.showingCounter').innerText;
+
+    count = count.split(' ');
+    count = count[count.length - 1];
+
+    return count;
   });
+
+  // 4 - Retourner les données (et fermer le navigateur)
+  browser.close();
+  return result;
 };
