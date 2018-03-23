@@ -1,6 +1,105 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 100;
+  src: url(d7d5d4588a9f50c99264bc12e4892a7c.ttf) format("truetype"); }
+
+canvas {
+  border: 4px dashed #ffffff;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-left: 10px; }
+
+.results {
+  letter-spacing: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-transform: none;
+  width: 400px;
+  word-break: break-word; }
+
+.search {
+  height: 65px;
+  margin-bottom: 100px;
+  margin-top: 100px;
+  text-align: center; }
+  .search > * {
+    background: none;
+    border: none;
+    border-bottom: 5px solid #ffffff;
+    color: #ffffff;
+    font-size: 30px;
+    height: 100%;
+    outline: 2px #ffffff; }
+  .search a {
+    cursor: pointer;
+    padding: 11px;
+    text-decoration: none;
+    -webkit-transition: background-color .3s, border-bottom .3s,  color .3s;
+    -moz-transition: background-color .3s, border-bottom .3s,  color .3s;
+    -ms-transition: background-color .3s, border-bottom .3s,  color .3s;
+    -o-transition: background-color .3s, border-bottom .3s,  color .3s;
+    transition: background-color .3s, border-bottom .3s,  color .3s; }
+    .search a:active {
+      background-color: white !important;
+      border-bottom: 5px solid grey;
+      color: #000000; }
+    .search a:hover {
+      background-color: rgba(255, 255, 255, 0.3); }
+
+::selection {
+  background: #ffffff;
+  color: #000000; }
+
+::-moz-selection {
+  background: #ffffff;
+  color: #000000; }
+
+html {
+  font-family: "Open Sans", sans-serif, sans-serif;
+  font-size: 16px;
+  letter-spacing: .5rem;
+  text-transform: uppercase; }
+
 body {
-  background-color: #ff8500;
+  background-color: #000000;
+  color: #ffffff;
+  height: 100vh;
   margin: 0;
-  overflow: hidden; }
+  overflow: hidden;
+  width: 100vw; }
+
+.content {
+  display: inline-flex;
+  height: 100%;
+  width: 100%; }
+  .content > * {
+    width: 50%; }
+  .content .right h1 {
+    font-size: 4.5rem;
+    text-align: center; }
+
+.wrapper-dowload {
+  margin-top: 50px;
+  text-align: center; }
+  .wrapper-dowload .download {
+    background: none;
+    border: 5px solid #ffffff;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 15px;
+    text-decoration: none;
+    -webkit-transition: background-color .3s, border .3s,  color .3s;
+    -moz-transition: background-color .3s, border .3s,  color .3s;
+    -ms-transition: background-color .3s, border .3s,  color .3s;
+    -o-transition: background-color .3s, border .3s,  color .3s;
+    transition: background-color .3s, border .3s,  color .3s; }
+    .wrapper-dowload .download:active {
+      border: 5px solid grey; }
+    .wrapper-dowload .download:hover {
+      background-color: #ffffff;
+      color: #000000; }
 
 /*# sourceMappingURL=app.css.map*/
