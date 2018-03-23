@@ -1,0 +1,43 @@
+.results {
+    letter-spacing: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-transform: none;
+    width: 400px;
+    word-break: break-word;
+}
+.search {
+    height: 65px;
+    margin-bottom: 100px;
+    margin-top: 100px;
+    text-align: center;
+    > * {
+        background: none;
+        border: none;
+        border-bottom: 5px solid $white;
+        color: $white;
+        font-size: 30px;
+        height: 100%;
+        outline: 2px $white;
+    }
+    a {
+        cursor: pointer;
+        padding: 11px;
+        text-decoration: none;
+        -webkit-transition: background-color .3s, border-bottom .3s,  color .3s;
+        -moz-transition: background-color .3s, border-bottom .3s,  color .3s;
+        -ms-transition: background-color .3s, border-bottom .3s,  color .3s;
+        -o-transition: background-color .3s, border-bottom .3s,  color .3s;
+        transition: background-color .3s, border-bottom .3s,  color .3s;
+        &:active {
+            background-color: rgba($white, 1) !important;
+            border-bottom: 5px solid grey;
+            color: $black;
+        }
+        &:hover {
+            background-color: rgba($white, .3);
+        }
+    }
+}

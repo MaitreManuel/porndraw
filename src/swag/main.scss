@@ -1,7 +1,67 @@
 @import 'tools/variables';
+@import 'tools/font';
 
+@import 'canvas';
+@import 'search';
+
+::selection {
+    background: $white;
+    color: $black;
+}
+::-moz-selection {
+    background: $white;
+    color: $black;
+}
+html {
+    font-family: $Roboto, sans-serif;
+    font-size: 16px;
+    letter-spacing: .5rem;
+    text-transform: uppercase;
+}
 body {
-    background-color: $orange;
+    background-color: $black;
+    color: $white;
+    height: 100vh;
     margin: 0;
     overflow: hidden;
+    width: 100vw;
+}
+.content {
+    display: inline-flex;
+    height: 100%;
+    width: 100%;
+    > * {
+        width: 50%;
+    }
+    .right {
+        h1 {
+            font-size: 4.5rem;
+            text-align: center;
+        }
+    }
+}
+.wrapper-dowload {
+    margin-top: 50px;
+    text-align: center;
+    .download {
+        background: none;
+        border: 5px solid $white;
+        color: $white;
+        cursor: pointer;
+        font-size: 20px;
+        padding: 15px;
+        text-decoration: none;
+        -webkit-transition: background-color .3s, border .3s,  color .3s;
+        -moz-transition: background-color .3s, border .3s,  color .3s;
+        -ms-transition: background-color .3s, border .3s,  color .3s;
+        -o-transition: background-color .3s, border .3s,  color .3s;
+        transition: background-color .3s, border .3s,  color .3s;
+        &:active {
+            border: 5px solid grey;
+        }
+        &:hover {
+            background-color: $white;
+            color: $black;
+        }
+    }
 }

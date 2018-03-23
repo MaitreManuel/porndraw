@@ -1,4 +1,3 @@
-const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 
 const PornHub = require('./Videos');
