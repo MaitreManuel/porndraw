@@ -1,7 +1,17 @@
 import '../../swag/main.scss';
 
+import Swal from 'sweetalert2';
+
 import * as Canvas from './draw/canvas';
 import * as Ajax from './utils/ajax';
+
+const settings = {
+  canvas: 'canvas',
+  fontSize: 28,
+  color: '#ffffff',
+  offsetX : 0,
+  offsetY: 0
+};
 
 (() => {
   let default_text = 'Faites votre recherche !',
@@ -10,7 +20,7 @@ import * as Ajax from './utils/ajax';
     button_search = document.querySelector('#search-button');
 
   localStorage.setItem('text', default_text);
-  Canvas.init('canvas', localStorage.getItem('text'), 50, '#ffffff', 0, 0);
+  Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY);
 
   // Listeners
   download.addEventListener('click', () => {
@@ -34,15 +44,24 @@ import * as Ajax from './utils/ajax';
 
 const send_search = search => {
   Ajax.get('http://localhost:3000/videos', '?search='+ search, response => {
-    let extract_text = '';
-
     response = JSON.parse(response);
-    console.log(response);
+    if (response.result.type) {
+      Swal({
+        title: 'Aucun résultat 😢',
+        text: 'Ta recherche ne donne pas de résultat, recommence !',
+        type: 'warning',
+        confirmButtonText: 'Ok...'
+      });
+    } else {
+      let extract_text = '',
+        extract_thumb = [];
 
-    for (let i = 0; i < response.result.length; i++) {
-      extract_text += response.result[i].title +'\n';
+      for (let i = 0; i < response.result.length; i++) {
+        extract_text += response.result[i].title +' ';
+        extract_thumb.push(response.result[i].thumb);
+      }
+      localStorage.setItem('text', extract_text);
+      Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY, extract_thumb);
     }
-    localStorage.setItem('text', extract_text);
-    Canvas.init('canvas', localStorage.getItem('text'), 50, '#ffffff', 0, 0);
   });
 };

@@ -5,11 +5,32 @@
 
 canvas {
   border: 4px dashed #ffffff;
-  border-radius: 5px;
   margin-top: 10px;
   margin-left: 10px; }
 
-.results {
+.wrapper-download {
+  margin-top: 50px;
+  text-align: center; }
+  .wrapper-download .download {
+    background: none;
+    border: 5px solid #ffffff;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 15px;
+    text-decoration: none;
+    -webkit-transition: background-color .3s, border .3s,  color .3s;
+    -moz-transition: background-color .3s, border .3s,  color .3s;
+    -ms-transition: background-color .3s, border .3s,  color .3s;
+    -o-transition: background-color .3s, border .3s,  color .3s;
+    transition: background-color .3s, border .3s,  color .3s; }
+    .wrapper-download .download:active {
+      border: 5px solid grey; }
+    .wrapper-download .download:hover {
+      background-color: #ffffff;
+      color: #000000; }
+
+.infos {
   letter-spacing: 5px;
   margin-left: auto;
   margin-right: auto;
@@ -80,26 +101,10 @@ body {
     font-size: 4.5rem;
     text-align: center; }
 
-.wrapper-dowload {
-  margin-top: 50px;
-  text-align: center; }
-  .wrapper-dowload .download {
-    background: none;
-    border: 5px solid #ffffff;
-    color: #ffffff;
-    cursor: pointer;
-    font-size: 20px;
-    padding: 15px;
-    text-decoration: none;
-    -webkit-transition: background-color .3s, border .3s,  color .3s;
-    -moz-transition: background-color .3s, border .3s,  color .3s;
-    -ms-transition: background-color .3s, border .3s,  color .3s;
-    -o-transition: background-color .3s, border .3s,  color .3s;
-    transition: background-color .3s, border .3s,  color .3s; }
-    .wrapper-dowload .download:active {
-      border: 5px solid grey; }
-    .wrapper-dowload .download:hover {
-      background-color: #ffffff;
-      color: #000000; }
+.swal2-popup {
+  border-radius: 0 !important;
+  letter-spacing: 0; }
+  .swal2-popup .swal2-content {
+    text-transform: none; }
 
 /*# sourceMappingURL=app.css.map*/

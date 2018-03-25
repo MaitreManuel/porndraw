@@ -1,7 +1,12 @@
 import C2S from 'canvas2svg';
 
 let generalCtx = '',
-  svgExportCtx = '';
+  svgExportCtx = '',
+  canvasElemGlobal = '',
+  fontSizeGlobal = '',
+  colorGlobal = '',
+  offsetXGlobal = '',
+  offsetYGlobal = '';
 
 exports.download = (filename, content) => {
   let pseudoLink = document.createElement('a');
@@ -14,11 +19,18 @@ exports.download = (filename, content) => {
   document.body.removeChild(pseudoLink);
 };
 
-exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY) => {
-  let line = text.split('\n'),
+exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => {
+  let line = text.split(''),
     canvas = document.querySelector(canvasElem),
     ctx = canvas.getContext('2d'),
     svgExport;
+  console.log(thumbs);
+
+  canvasElemGlobal = canvasElem;
+  fontSizeGlobal = fontSize;
+  colorGlobal = color;
+  offsetXGlobal = offsetX;
+  offsetYGlobal = offsetY;
 
   exports.resize(canvas);
   svgExport = new C2S(ctx.canvas.width, ctx.canvas.height);
@@ -45,18 +57,25 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY) => {
     positionY += offsetY;
   }
 
-  for (let i = 0; i < line.length; i++) {
-    // fWidth (currentX + measureText), if fWidth > canvasWidth then currentY += 1 && currentX = 0
-    for (let j = 0; j < line[i].length; j++) {
-      let letterSpacing = 0;
-      let lineHeight = positionY;
+  let j = 0,
+    lineWidth = positionX,
+    lineHeight = positionY;
 
-      if(line[i][j] === line[i].length) {
-        lineHeight = lineHeight * i;
-      }
-      ctx.strokeText(line[i][j], positionX + (letterSpacing + (j * 40)), positionY + (i * fontSize));
-      svgExport.strokeText(line[i][j], positionX + (letterSpacing + (j * 40)), positionY + (i * fontSize));
+  for (let i = 0; i < line.length; i++) {
+    let letterSpacing = 0,
+      text = ctx.measureText(line[i]);
+
+    if ((lineWidth + text.width) > ctx.canvas.width) {
+      lineWidth = positionX;
+      lineHeight += positionY;
+      j = 1;
+    } else {
+      lineWidth = positionX + (letterSpacing + (j * 40));
+      j += 1;
     }
+
+    ctx.strokeText(line[i], lineWidth, lineHeight);
+    svgExport.strokeText(line[i], lineWidth, lineHeight);
   }
   exports.setGeneralCtx(ctx);
   exports.setSvgExportCtx(svgExport);
@@ -75,7 +94,7 @@ exports.resize = (canvas, trigger) => {
   canvas.height = document.body.clientHeight - 30;
 
   if (trigger === 'resize') {
-    exports.init('canvas', localStorage.getItem('text'), 50, '#ffffff', 0, 0);
+    exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal);
   }
 };
 
