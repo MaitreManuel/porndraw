@@ -35,11 +35,13 @@ var Ajax = _interopRequireWildcard(_ajax);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 (function () {
-  var download = document.querySelector('.download'),
-      button_search = document.querySelector('#search-input'),
-      input_search = document.querySelector('#search-button');
+  var default_text = 'Faites votre recherche !',
+      download = document.querySelector('.download'),
+      input_search = document.querySelector('#search-input'),
+      button_search = document.querySelector('#search-button');
 
-  Canvas.init('canvas', 'Faites votre recherche !', 50, '#ffffff', 0, 0);
+  localStorage.setItem('text', default_text);
+  Canvas.init('canvas', localStorage.getItem('text'), 50, '#ffffff', 0, 0);
 
   // Listeners
   download.addEventListener('click', function () {
@@ -49,15 +51,32 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
     Canvas.download(filename, svg);
   });
   button_search.addEventListener('click', function () {
-    console.log(input_search.value);
-    // Ajax.ajaxGET('http://localhost:3000/videos', '?search='+ input_search.value, result => {
-    //   console.log(result);
-    // });
+    send_search(input_search.value);
+  });
+  input_search.addEventListener('keydown', function (e) {
+    if (e.keyCode === 13) {
+      send_search(input_search.value);
+    }
   });
   window.addEventListener('resize', function () {
-    // Canvas.resize(document.querySelector('canvas'), 'resize');
+    Canvas.resize(document.querySelector('canvas'), 'resize');
   });
 })();
+
+var send_search = function send_search(search) {
+  Ajax.get('http://localhost:3000/videos', '?search=' + search, function (response) {
+    var extract_text = '';
+
+    response = JSON.parse(response);
+    console.log(response);
+
+    for (var i = 0; i < response.result.length; i++) {
+      extract_text += response.result[i].title + '\n';
+    }
+    localStorage.setItem('text', extract_text);
+    Canvas.init('canvas', localStorage.getItem('text'), 50, '#ffffff', 0, 0);
+  });
+};
 
 /***/ }),
 /* 2 */
@@ -87,22 +106,19 @@ exports.download = function (filename, content) {
   pseudoLink.setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(content));
   pseudoLink.setAttribute('download', filename);
   pseudoLink.style.display = 'none';
-
   document.body.appendChild(pseudoLink);
-
   pseudoLink.click();
-
   document.body.removeChild(pseudoLink);
 };
 
 exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY) {
-  var line = text.split(' '),
+  var line = text.split('\n'),
       canvas = document.querySelector(canvasElem),
-      ctx = canvas.getContext('2d');
+      ctx = canvas.getContext('2d'),
+      svgExport = void 0;
 
   exports.resize(canvas);
-
-  var svgExport = new _canvas2svg2.default(ctx.canvas.width, ctx.canvas.height);
+  svgExport = new _canvas2svg2.default(ctx.canvas.width, ctx.canvas.height);
 
   ctx.font = fontSize + 'px ' + 'Courier New';
   ctx.strokeStyle = color;
@@ -156,7 +172,7 @@ exports.resize = function (canvas, trigger) {
   canvas.height = document.body.clientHeight - 30;
 
   if (trigger === 'resize') {
-    canvas.getContext('2d').restore();
+    exports.init('canvas', localStorage.getItem('text'), 50, '#ffffff', 0, 0);
   }
 };
 
@@ -1304,7 +1320,7 @@ exports.setSvgExportCtx = function (ctx) {
 "use strict";
 
 
-exports.ajaxGET = function (url, params, callback) {
+exports.get = function (url, params, callback) {
   var xhr = new XMLHttpRequest();
 
   if (!params) {

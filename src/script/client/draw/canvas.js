@@ -9,22 +9,19 @@ exports.download = (filename, content) => {
   pseudoLink.setAttribute('href', 'data:image/svg+xml;charset=utf-8,'+ encodeURIComponent(content));
   pseudoLink.setAttribute('download', filename);
   pseudoLink.style.display = 'none';
-
   document.body.appendChild(pseudoLink);
-
   pseudoLink.click();
-
   document.body.removeChild(pseudoLink);
 };
 
 exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY) => {
-  let line = text.split(' '),
+  let line = text.split('\n'),
     canvas = document.querySelector(canvasElem),
-    ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d'),
+    svgExport;
 
   exports.resize(canvas);
-
-  let svgExport = new C2S(ctx.canvas.width, ctx.canvas.height);
+  svgExport = new C2S(ctx.canvas.width, ctx.canvas.height);
 
   ctx.font = fontSize + 'px ' + 'Courier New';
   ctx.strokeStyle = color;
@@ -78,7 +75,7 @@ exports.resize = (canvas, trigger) => {
   canvas.height = document.body.clientHeight - 30;
 
   if (trigger === 'resize') {
-    canvas.getContext('2d').restore();
+    exports.init('canvas', localStorage.getItem('text'), 50, '#ffffff', 0, 0);
   }
 };
 

@@ -1,4 +1,4 @@
-exports.ajaxGET = (url, params, callback) => {
+exports.get = (url, params, callback) => {
   let xhr = new XMLHttpRequest();
 
   if (!params) {

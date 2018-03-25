@@ -53,6 +53,7 @@
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.3",
     "request": "^2.85.0",
-    "snekfetch": "^3.6.4"
+    "snekfetch": "^3.6.4",
+    "sweetalert2": "^7.18.0"
   }
 }

@@ -1,7 +1,6 @@
 const puppeteer = require('puppeteer');
 
 const PornHub = require('./Videos');
-// showingCounter
 
 exports.search = (search, callback) => {
   const Videos = new PornHub();
@@ -9,13 +8,23 @@ exports.search = (search, callback) => {
   Videos.searchVideos({
     search: search
   }).then(videos => {
-    let extract_texts = [];
+    let extract_datas = [];
 
-    for (let i = 0; i < videos.videos.length; i++) {
-      extract_texts.push(videos.videos[i].title);
+    if (videos.code === '2001') {
+      callback({
+        message: 'no videos founds',
+        type: 'error'
+      });
+    } else {
+      for (let i = 0; i < videos.videos.length; i++) {
+        extract_datas.push({
+          title: videos.videos[i].title,
+          thumb: videos.videos[i].thumb
+        });
+      }
+
+      callback(extract_datas);
     }
-
-    callback(extract_texts);
   });
 };
 exports.getNbPornHubVideos = async () => {
