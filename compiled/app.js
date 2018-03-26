@@ -42,7 +42,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var settings = {
   canvas: 'canvas',
-  fontSize: 28,
+  fontSize: 20,
   color: '#ffffff',
   offsetX: 0,
   offsetY: 0
@@ -3487,7 +3487,7 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
       lineHeight += positionY;
       j = 1;
     } else {
-      lineWidth = positionX + (letterSpacing + j * 40);
+      lineWidth = positionX + (letterSpacing + j * fontSize);
       j += 1;
     }
 
