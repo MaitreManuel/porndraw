@@ -70,7 +70,7 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
       lineHeight += positionY;
       j = 1;
     } else {
-      lineWidth = positionX + (letterSpacing + (j * 40));
+      lineWidth = positionX + (letterSpacing + (j * fontSize));
       j += 1;
     }
 

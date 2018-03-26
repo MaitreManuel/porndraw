@@ -7,7 +7,7 @@ import * as Ajax from './utils/ajax';
 
 const settings = {
   canvas: 'canvas',
-  fontSize: 28,
+  fontSize: 20,
   color: '#ffffff',
   offsetX : 0,
   offsetY: 0
