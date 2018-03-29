@@ -3418,6 +3418,7 @@ var _canvas2svg2 = _interopRequireDefault(_canvas2svg);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var generalCtx = '',
+    secondaryCtx = '',
     svgExportCtx = '',
     canvasElemGlobal = '',
     fontSizeGlobal = '',
@@ -3437,11 +3438,32 @@ exports.download = function (filename, content) {
 };
 
 exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) {
+  var loadImage = function loadImage(url) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () {
+        return resolve(img);
+      };
+      img.onerror = function () {
+        return reject(new Error('load ' + url + ' fail'));
+      };
+      img.src = url;
+    });
+  };
+  var depict = function depict(options) {
+    var context = exports.getSecondaryCtx();
+    var myOptions = Object.assign({}, options);
+    return loadImage(myOptions.uri).then(function (img) {
+      context.drawImage(img, myOptions.x, myOptions.y, myOptions.sw, myOptions.sh);
+    });
+  };
+
   var line = text.split(''),
       canvas = document.querySelector(canvasElem),
+      canvasImg = document.querySelector('#canvasImg'),
       ctx = canvas.getContext('2d'),
+      ctxImg = canvasImg.getContext('2d'),
       svgExport = void 0;
-  console.log(thumbs);
 
   canvasElemGlobal = canvasElem;
   fontSizeGlobal = fontSize;
@@ -3450,6 +3472,7 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
   offsetYGlobal = offsetY;
 
   exports.resize(canvas);
+  exports.resize(canvasImg);
   svgExport = new _canvas2svg2.default(ctx.canvas.width, ctx.canvas.height);
 
   ctx.font = fontSize + 'px ' + 'Courier New';
@@ -3469,7 +3492,6 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
   if (offsetX !== 0) {
     positionX += offsetX;
   }
-
   if (offsetY !== 0) {
     positionY += offsetY;
   }
@@ -3478,9 +3500,50 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
       lineWidth = positionX,
       lineHeight = positionY;
 
-  for (var i = 0; i < line.length; i++) {
+  if (thumbs) {
+    var width = 180,
+        heigh = 135,
+        positions = [{
+      x: ctx.canvas.width / 2 - 180 / 2,
+      y: ctx.canvas.height / 2 - 800 / 2
+    }, {
+      x: ctx.canvas.width / 2 - -35 / 2,
+      y: ctx.canvas.height / 2 - 470 / 2
+    }, {
+      x: ctx.canvas.width / 2 - 400 / 2,
+      y: ctx.canvas.height / 2 - 470 / 2
+    }, {
+      x: ctx.canvas.width / 2 - 610 / 2,
+      y: ctx.canvas.height / 2 - 130 / 2
+    }, {
+      x: ctx.canvas.width / 2 - 180 / 2,
+      y: ctx.canvas.height / 2 - 130 / 2
+    }, {
+      x: ctx.canvas.width / 2 - -250 / 2,
+      y: ctx.canvas.height / 2 - 130 / 2
+    }, {
+      x: ctx.canvas.width / 2 - -35 / 2,
+      y: ctx.canvas.height / 2 - -205 / 2
+    }, {
+      x: ctx.canvas.width / 2 - 395 / 2,
+      y: ctx.canvas.height / 2 - -205 / 2
+    }, {
+      x: ctx.canvas.width / 2 - 180 / 2,
+      y: ctx.canvas.height / 2 - -540 / 2
+    }];
+    for (var i = 0; i < 9; i++) {
+      depict({
+        uri: thumbs[i],
+        x: positions[i].x,
+        y: positions[i].y,
+        sw: width,
+        sh: heigh
+      });
+    }
+  }
+  for (var _i = 0; _i < line.length; _i++) {
     var letterSpacing = 0,
-        _text = ctx.measureText(line[i]);
+        _text = ctx.measureText(line[_i]);
 
     if (lineWidth + _text.width > ctx.canvas.width) {
       lineWidth = positionX;
@@ -3491,15 +3554,20 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
       j += 1;
     }
 
-    ctx.strokeText(line[i], lineWidth, lineHeight);
-    svgExport.strokeText(line[i], lineWidth, lineHeight);
+    ctx.strokeText(line[_i], lineWidth, lineHeight);
+    svgExport.strokeText(line[_i], lineWidth, lineHeight);
   }
   exports.setGeneralCtx(ctx);
+  exports.setSecondaryCtx(ctxImg);
   exports.setSvgExportCtx(svgExport);
 };
 
 exports.getGeneralCtx = function () {
   return generalCtx;
+};
+
+exports.getSecondaryCtx = function () {
+  return secondaryCtx;
 };
 
 exports.getSvgExportCtx = function () {
@@ -3517,7 +3585,10 @@ exports.resize = function (canvas, trigger) {
 
 exports.setGeneralCtx = function (ctx) {
   generalCtx = ctx;
-  ctx.save();
+};
+
+exports.setSecondaryCtx = function (ctx) {
+  secondaryCtx = ctx;
 };
 
 exports.setSvgExportCtx = function (ctx) {
