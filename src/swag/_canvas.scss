@@ -1,5 +1,13 @@
-canvas {
+canvas:not(#canvasImg) {
     border: 4px dashed $white;
     margin-top: 10px;
     margin-left: 10px;
+    position: relative;
+    z-index: 2;
+}
+#canvasImg {
+    left: 14px;
+    position: absolute;
+    top: 14px;
+    z-index: 1;
 }
