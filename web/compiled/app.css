@@ -4,6 +4,7 @@
   src: url(d7d5d4588a9f50c99264bc12e4892a7c.ttf) format("truetype"); }
 
 canvas:not(#canvasImg) {
+  background: #ffffff;
   border: 4px dashed #ffffff;
   margin-top: 10px;
   margin-left: 10px;

@@ -9,6 +9,19 @@ let generalCtx = '',
   offsetXGlobal = '',
   offsetYGlobal = '';
 
+const params = {
+  steps: 40000,
+  maxThick: 7,
+  minThick: 0.1,
+  wiggleWaviness: 2,
+  spiralRadius: 470,
+  centerWidth: 0,
+  wiggleDistance: 1.2,
+  backgroundColor: '#000000',
+  drawingColor: '#ffffff',
+  isFilled: false,
+};
+
 exports.download = (filename, content) => {
   let pseudoLink = document.createElement('a');
 
@@ -21,19 +34,50 @@ exports.download = (filename, content) => {
 };
 
 exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => {
+  const depict = options => {
+    const context = exports.getSecondaryCtx();
+    const myOptions = Object.assign({}, options);
+    return loadImage(myOptions.uri).then(img => {
+      context.drawImage(img, myOptions.x, myOptions.y, myOptions.sw, myOptions.sh);
+    });
+  };
+  const drawSpiral = () => {
+    let spiralCtx = exports.getGeneralCtx(),
+      imgCtx = exports.getSecondaryCtx(),
+      svgExportCtx = exports.getSvgExportCtx(),
+      steps = params.steps,
+      maxThick = params.maxThick,
+      minThick = params.minThick,
+      wig = params.wiggleWaviness,
+      centerWidth = params.centerWidth,
+      wiggleDistance = params.wiggleDistance,
+      centerx = spiralCtx.canvas.width / 2,
+      centery = spiralCtx.canvas.height / 2;
+
+    for (let i = 0; i < steps; i++) {
+      let angle = params.spiralRadius / steps * i,
+        x = centerx + (centerWidth + wiggleDistance * angle) * Math.cos(angle) + Math.random() * wig,
+        y = centery + (centerWidth + wiggleDistance * angle) * Math.sin(angle) + Math.random() * wig,
+        pxl = imgCtx.getImageData(x, y, 1, 1).data.slice(0, 3),
+        pxlB = 255 - pxl.reduce((centerWidth, wiggleDistance) => centerWidth + wiggleDistance) / 3,
+        h = minThick + pxlB / (255 / (maxThick - minThick));
+
+      if (params.isFilled === true) {
+        spiralCtx.fillRect(x, y, h, h);
+        svgExportCtx.fillRect(x, y, h, h);
+      } else {
+        spiralCtx.strokeRect(x, y, h, h);
+        svgExportCtx.strokeRect(x, y, h, h);
+      }
+    }
+  };
   const loadImage = url => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
       img.onerror = () => reject(new Error(`load ${url} fail`));
       img.src = url;
-    });
-  };
-  const depict = options => {
-    const context = exports.getSecondaryCtx();
-    const myOptions = Object.assign({}, options);
-    return loadImage(myOptions.uri).then(img => {
-      context.drawImage(img, myOptions.x, myOptions.y, myOptions.sw, myOptions.sh);
+      img.crossOrigin = 'Anonymous';
     });
   };
 
@@ -121,6 +165,9 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
         sh: heigh
       });
     }
+    setTimeout(() => {
+      drawSpiral();
+    }, 1500);
   }
   for (let i = 0; i < line.length; i++) {
     let letterSpacing = 0,
@@ -137,6 +184,23 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
 
     ctx.strokeText(line[i], lineWidth, lineHeight);
     svgExport.strokeText(line[i], lineWidth, lineHeight);
+  }
+  if (localStorage.getItem('search')) {
+    let search = localStorage.getItem('search').split('');
+
+    ctx.font = 'bold '+ (fontSize * 4) + 'px ' + 'Courier New';
+    svgExport.font = 'bold '+ (fontSize * 4) + 'px ' + 'Courier New';
+
+    j = 0;
+    for (let i = 0; i < search.length; i++) {
+      let letterSpacing = 0;
+
+      lineWidth = positionX + (letterSpacing + (j * fontSize * 3));
+      j += 1;
+
+      ctx.fillText(search[i], lineWidth, ctx.canvas.height - 40);
+      svgExport.fillText(search[i], lineWidth, ctx.canvas.height - 40);
+    }
   }
   exports.setGeneralCtx(ctx);
   exports.setSecondaryCtx(ctxImg);

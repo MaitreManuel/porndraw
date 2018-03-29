@@ -8,7 +8,7 @@ import * as Ajax from './utils/ajax';
 const settings = {
   canvas: 'canvas',
   fontSize: 20,
-  color: '#ffffff',
+  color: '#000000',
   offsetX : 0,
   offsetY: 0
 };
@@ -20,6 +20,8 @@ const settings = {
     button_search = document.querySelector('#search-button');
 
   localStorage.setItem('text', default_text);
+  localStorage.setItem('search', '');
+
   Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY);
 
   // Listeners
@@ -61,6 +63,7 @@ const send_search = search => {
         extract_thumb.push(response.result[i].thumb);
       }
       localStorage.setItem('text', extract_text);
+      localStorage.setItem('search', response.search.toUpperCase());
       Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY, extract_thumb);
     }
   });
