@@ -43,7 +43,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var settings = {
   canvas: 'canvas',
   fontSize: 20,
-  color: '#ffffff',
+  color: '#000000',
   offsetX: 0,
   offsetY: 0
 };
@@ -55,6 +55,8 @@ var settings = {
       button_search = document.querySelector('#search-button');
 
   localStorage.setItem('text', default_text);
+  localStorage.setItem('search', '');
+
   Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY);
 
   // Listeners
@@ -96,6 +98,7 @@ var send_search = function send_search(search) {
         extract_thumb.push(response.result[i].thumb);
       }
       localStorage.setItem('text', extract_text);
+      localStorage.setItem('search', response.search.toUpperCase());
       Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY, extract_thumb);
     }
   });
@@ -3426,6 +3429,19 @@ var generalCtx = '',
     offsetXGlobal = '',
     offsetYGlobal = '';
 
+var params = {
+  steps: 40000,
+  maxThick: 7,
+  minThick: 0.1,
+  wiggleWaviness: 2,
+  spiralRadius: 470,
+  centerWidth: 0,
+  wiggleDistance: 1.2,
+  backgroundColor: '#000000',
+  drawingColor: '#ffffff',
+  isFilled: false
+};
+
 exports.download = function (filename, content) {
   var pseudoLink = document.createElement('a');
 
@@ -3438,6 +3454,45 @@ exports.download = function (filename, content) {
 };
 
 exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) {
+  var depict = function depict(options) {
+    var context = exports.getSecondaryCtx();
+    var myOptions = Object.assign({}, options);
+    return loadImage(myOptions.uri).then(function (img) {
+      context.drawImage(img, myOptions.x, myOptions.y, myOptions.sw, myOptions.sh);
+    });
+  };
+  var drawSpiral = function drawSpiral() {
+    var spiralCtx = exports.getGeneralCtx(),
+        imgCtx = exports.getSecondaryCtx(),
+        svgExportCtx = exports.getSvgExportCtx(),
+        steps = params.steps,
+        maxThick = params.maxThick,
+        minThick = params.minThick,
+        wig = params.wiggleWaviness,
+        centerWidth = params.centerWidth,
+        wiggleDistance = params.wiggleDistance,
+        centerx = spiralCtx.canvas.width / 2,
+        centery = spiralCtx.canvas.height / 2;
+
+    for (var i = 0; i < steps; i++) {
+      var angle = params.spiralRadius / steps * i,
+          x = centerx + (centerWidth + wiggleDistance * angle) * Math.cos(angle) + Math.random() * wig,
+          y = centery + (centerWidth + wiggleDistance * angle) * Math.sin(angle) + Math.random() * wig,
+          pxl = imgCtx.getImageData(x, y, 1, 1).data.slice(0, 3),
+          pxlB = 255 - pxl.reduce(function (centerWidth, wiggleDistance) {
+        return centerWidth + wiggleDistance;
+      }) / 3,
+          h = minThick + pxlB / (255 / (maxThick - minThick));
+
+      if (params.isFilled === true) {
+        spiralCtx.fillRect(x, y, h, h);
+        svgExportCtx.fillRect(x, y, h, h);
+      } else {
+        spiralCtx.strokeRect(x, y, h, h);
+        svgExportCtx.strokeRect(x, y, h, h);
+      }
+    }
+  };
   var loadImage = function loadImage(url) {
     return new Promise(function (resolve, reject) {
       var img = new Image();
@@ -3448,13 +3503,7 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
         return reject(new Error('load ' + url + ' fail'));
       };
       img.src = url;
-    });
-  };
-  var depict = function depict(options) {
-    var context = exports.getSecondaryCtx();
-    var myOptions = Object.assign({}, options);
-    return loadImage(myOptions.uri).then(function (img) {
-      context.drawImage(img, myOptions.x, myOptions.y, myOptions.sw, myOptions.sh);
+      img.crossOrigin = 'Anonymous';
     });
   };
 
@@ -3540,6 +3589,9 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
         sh: heigh
       });
     }
+    setTimeout(function () {
+      drawSpiral();
+    }, 1500);
   }
   for (var _i = 0; _i < line.length; _i++) {
     var letterSpacing = 0,
@@ -3556,6 +3608,23 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
 
     ctx.strokeText(line[_i], lineWidth, lineHeight);
     svgExport.strokeText(line[_i], lineWidth, lineHeight);
+  }
+  if (localStorage.getItem('search')) {
+    var search = localStorage.getItem('search').split('');
+
+    ctx.font = 'bold ' + fontSize * 4 + 'px ' + 'Courier New';
+    svgExport.font = 'bold ' + fontSize * 4 + 'px ' + 'Courier New';
+
+    j = 0;
+    for (var _i2 = 0; _i2 < search.length; _i2++) {
+      var _letterSpacing = 0;
+
+      lineWidth = positionX + (_letterSpacing + j * fontSize * 3);
+      j += 1;
+
+      ctx.fillText(search[_i2], lineWidth, ctx.canvas.height - 40);
+      svgExport.fillText(search[_i2], lineWidth, ctx.canvas.height - 40);
+    }
   }
   exports.setGeneralCtx(ctx);
   exports.setSecondaryCtx(ctxImg);
