@@ -12,6 +12,7 @@
     "build:dev": "webpack",
     "build": "NODE_ENV=production webpack -p",
     "build:server": "nodemon src/script/server/server.js",
+    "deploy": "npm run build && git add -A && git commit -nm ':rocket: deploy' && git push && git subtree push --prefix web origin gh-pages",
     "start": "npm run build:server"
   },
   "repository": {
