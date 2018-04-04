@@ -18,7 +18,7 @@ canvas:not(#canvasImg) {
   z-index: 1; }
 
 .wrapper-download {
-  margin-top: 50px;
+  margin-top: 60px;
   text-align: center; }
   .wrapper-download .download {
     background: none;
@@ -51,8 +51,8 @@ canvas:not(#canvasImg) {
 
 .search {
   height: 65px;
-  margin-bottom: 100px;
-  margin-top: 100px;
+  margin-bottom: 40px;
+  margin-top: 40px;
   text-align: center; }
   .search > * {
     background: none;
@@ -77,6 +77,64 @@ canvas:not(#canvasImg) {
       color: #000000; }
     .search a:hover {
       background-color: rgba(255, 255, 255, 0.3); }
+
+input:checked + label .card {
+  background: #666666; }
+
+label {
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  perspective: 1000;
+  position: absolute;
+  right: 0;
+  top: 0; }
+
+.card {
+  background: #ff8500;
+  height: 2.5rem;
+  pointer-events: none;
+  position: relative;
+  width: 50%;
+  -webkit-transition: .4s;
+  -moz-transition: .4s;
+  transition: .4s; }
+
+.slide {
+  overflow: hidden; }
+
+.slide input:checked + label .card {
+  background: transparent;
+  -webkit-transform: translateX(3.75rem);
+  -moz-transform: translateX(3.75rem);
+  transform: translateX(3.75rem); }
+
+.slide .card {
+  background: transparent;
+  box-shadow: -3.75rem 0 #ff8500, 3.75rem 0 #666666;
+  -webkit-transform: translate(0);
+  -moz-transform: translate(0);
+  transform: translate(0); }
+
+.toggle {
+  border: 1px solid #666666;
+  height: 2.5rem;
+  margin: auto;
+  position: relative;
+  width: 7.5rem; }
+  .toggle::after, .toggle::before {
+    line-height: 2.5rem; }
+  .toggle::after {
+    content: "ON"; }
+  .toggle::before {
+    content: "OFF"; }
+
+.toggle-input {
+  display: none; }
+
+.wrapper-toggle {
+  margin-top: 15px;
+  text-align: center; }
 
 ::selection {
   background: #ffffff;
@@ -108,6 +166,8 @@ body {
     width: 50%; }
   .content .right h1 {
     font-size: 4.5rem;
+    margin-bottom: 20px;
+    margin-top: 20px;
     text-align: center; }
 
 .swal2-popup {

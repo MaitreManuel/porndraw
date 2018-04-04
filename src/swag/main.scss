@@ -1,10 +1,11 @@
 @import 'tools/variables';
 @import 'tools/font';
 
-@import 'canvas';
-@import 'download';
-@import 'infos';
-@import 'search';
+@import 'components/canvas';
+@import 'components/download';
+@import 'components/infos';
+@import 'components/search';
+@import 'components/toggle';
 
 ::selection {
     background: $white;
@@ -38,6 +39,8 @@ body {
     .right {
         h1 {
             font-size: 4.5rem;
+            margin-bottom: 20px;
+            margin-top: 20px;
             text-align: center;
         }
     }

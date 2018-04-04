@@ -123,7 +123,7 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
     lineWidth = positionX,
     lineHeight = positionY;
 
-  if (thumbs) {
+  if (thumbs && localStorage.getItem('draw_image') === 'true') {
     const width = 180,
       heigh = 135,
       positions = [
@@ -169,23 +169,25 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
       drawSpiral();
     }, 1500);
   }
-  for (let i = 0; i < line.length; i++) {
-    let letterSpacing = 0,
-      text = ctx.measureText(line[i]);
+  if (localStorage.getItem('draw_text') === 'true') {
+    for (let i = 0; i < line.length; i++) {
+      let letterSpacing = 0,
+        text = ctx.measureText(line[i]);
 
-    if ((lineWidth + text.width) > ctx.canvas.width) {
-      lineWidth = positionX;
-      lineHeight += positionY;
-      j = 1;
-    } else {
-      lineWidth = positionX + (letterSpacing + (j * fontSize));
-      j += 1;
+      if ((lineWidth + text.width) > ctx.canvas.width) {
+        lineWidth = positionX;
+        lineHeight += positionY;
+        j = 1;
+      } else {
+        lineWidth = positionX + (letterSpacing + (j * fontSize));
+        j += 1;
+      }
+
+      ctx.strokeText(line[i], lineWidth, lineHeight);
+      svgExport.strokeText(line[i], lineWidth, lineHeight);
     }
-
-    ctx.strokeText(line[i], lineWidth, lineHeight);
-    svgExport.strokeText(line[i], lineWidth, lineHeight);
   }
-  if (localStorage.getItem('search')) {
+  if (localStorage.getItem('search') && localStorage.getItem('draw_text') === 'true') {
     let search = localStorage.getItem('search').split('');
 
     ctx.font = 'bold '+ (fontSize * 4) + 'px ' + 'Courier New';
@@ -224,7 +226,7 @@ exports.resize = (canvas, trigger) => {
   canvas.height = document.body.clientHeight - 30;
 
   if (trigger === 'resize') {
-    exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal);
+    exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal, JSON.parse(localStorage.getItem('images')));
   }
 };
 

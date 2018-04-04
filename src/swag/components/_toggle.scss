@@ -1,0 +1,61 @@
+input:checked + label .card {
+    background: $grey_medium;
+}
+label {
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    perspective: 1000;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.card {
+    background: $orange;
+    height: 2.5rem;
+    pointer-events: none;
+    position: relative;
+    width: 50%;
+    -webkit-transition: .4s;
+    -moz-transition: .4s;
+    transition: .4s;
+}
+.slide {
+    overflow: hidden;
+}
+.slide input:checked + label .card {
+    background: transparent;
+    -webkit-transform: translateX(3.75rem);
+    -moz-transform: translateX(3.75rem);
+    transform: translateX(3.75rem);
+}
+.slide .card {
+    background: transparent;
+    box-shadow: -3.75rem 0 $orange, 3.75rem 0 $grey_medium;
+    -webkit-transform: translate(0);
+    -moz-transform: translate(0);
+    transform: translate(0);
+}
+.toggle {
+    border: 1px solid $grey_medium;
+    height: 2.5rem;
+    margin: auto;
+    position: relative;
+    width: 7.5rem;
+    &::after, &::before {
+        line-height: 2.5rem;
+    }
+    &::after {
+        content: "ON";
+    }
+    &::before {
+        content: "OFF";
+    }
+}
+.toggle-input {
+    display: none;
+}
+.wrapper-toggle {
+    margin-top: 15px;
+    text-align: center;
+}

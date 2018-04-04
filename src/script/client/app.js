@@ -17,10 +17,15 @@ const settings = {
   let default_text = 'Faites votre recherche !',
     download = document.querySelector('.download'),
     input_search = document.querySelector('#search-input'),
+    show_text = document.querySelector('#text'),
+    show_image = document.querySelector('#image'),
     button_search = document.querySelector('#search-button');
 
   localStorage.setItem('text', default_text);
+  localStorage.setItem('draw_text', 'true');
+  localStorage.setItem('draw_image', 'true');
   localStorage.setItem('search', '');
+  localStorage.setItem('images', '');
 
   Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY);
 
@@ -33,6 +38,12 @@ const settings = {
   });
   button_search.addEventListener('click', () => {
     send_search(input_search.value);
+  });
+  show_text.addEventListener('change', e => {
+    localStorage.setItem('draw_text', e.target.checked);
+  });
+  show_image.addEventListener('change', e => {
+    localStorage.setItem('draw_image', e.target.checked);
   });
   input_search.addEventListener('keydown', e => {
     if(e.keyCode === 13) {
@@ -63,6 +74,7 @@ const send_search = search => {
         extract_thumb.push(response.result[i].thumb);
       }
       localStorage.setItem('text', extract_text);
+      localStorage.setItem('images', JSON.stringify(extract_thumb));
       localStorage.setItem('search', response.search.toUpperCase());
       Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY, extract_thumb);
     }

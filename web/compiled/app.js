@@ -52,10 +52,15 @@ var settings = {
   var default_text = 'Faites votre recherche !',
       download = document.querySelector('.download'),
       input_search = document.querySelector('#search-input'),
+      show_text = document.querySelector('#text'),
+      show_image = document.querySelector('#image'),
       button_search = document.querySelector('#search-button');
 
   localStorage.setItem('text', default_text);
+  localStorage.setItem('draw_text', 'true');
+  localStorage.setItem('draw_image', 'true');
   localStorage.setItem('search', '');
+  localStorage.setItem('images', '');
 
   Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY);
 
@@ -68,6 +73,12 @@ var settings = {
   });
   button_search.addEventListener('click', function () {
     send_search(input_search.value);
+  });
+  show_text.addEventListener('change', function (e) {
+    localStorage.setItem('draw_text', e.target.checked);
+  });
+  show_image.addEventListener('change', function (e) {
+    localStorage.setItem('draw_image', e.target.checked);
   });
   input_search.addEventListener('keydown', function (e) {
     if (e.keyCode === 13) {
@@ -98,6 +109,7 @@ var send_search = function send_search(search) {
         extract_thumb.push(response.result[i].thumb);
       }
       localStorage.setItem('text', extract_text);
+      localStorage.setItem('images', JSON.stringify(extract_thumb));
       localStorage.setItem('search', response.search.toUpperCase());
       Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY, extract_thumb);
     }
@@ -3549,7 +3561,7 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
       lineWidth = positionX,
       lineHeight = positionY;
 
-  if (thumbs) {
+  if (thumbs && localStorage.getItem('draw_image') === 'true') {
     var width = 180,
         heigh = 135,
         positions = [{
@@ -3593,23 +3605,25 @@ exports.init = function (canvasElem, text, fontSize, color, offsetX, offsetY, th
       drawSpiral();
     }, 1500);
   }
-  for (var _i = 0; _i < line.length; _i++) {
-    var letterSpacing = 0,
-        _text = ctx.measureText(line[_i]);
+  if (localStorage.getItem('draw_text') === 'true') {
+    for (var _i = 0; _i < line.length; _i++) {
+      var letterSpacing = 0,
+          _text = ctx.measureText(line[_i]);
 
-    if (lineWidth + _text.width > ctx.canvas.width) {
-      lineWidth = positionX;
-      lineHeight += positionY;
-      j = 1;
-    } else {
-      lineWidth = positionX + (letterSpacing + j * fontSize);
-      j += 1;
+      if (lineWidth + _text.width > ctx.canvas.width) {
+        lineWidth = positionX;
+        lineHeight += positionY;
+        j = 1;
+      } else {
+        lineWidth = positionX + (letterSpacing + j * fontSize);
+        j += 1;
+      }
+
+      ctx.strokeText(line[_i], lineWidth, lineHeight);
+      svgExport.strokeText(line[_i], lineWidth, lineHeight);
     }
-
-    ctx.strokeText(line[_i], lineWidth, lineHeight);
-    svgExport.strokeText(line[_i], lineWidth, lineHeight);
   }
-  if (localStorage.getItem('search')) {
+  if (localStorage.getItem('search') && localStorage.getItem('draw_text') === 'true') {
     var search = localStorage.getItem('search').split('');
 
     ctx.font = 'bold ' + fontSize * 4 + 'px ' + 'Courier New';
@@ -3648,7 +3662,7 @@ exports.resize = function (canvas, trigger) {
   canvas.height = document.body.clientHeight - 30;
 
   if (trigger === 'resize') {
-    exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal);
+    exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal, JSON.parse(localStorage.getItem('images')));
   }
 };
 
