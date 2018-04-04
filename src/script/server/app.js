@@ -1,20 +1,21 @@
 const express = require('express');
-const server = express();
+const app = express();
+const server = require('http').Server(app);
 
 const PornHub = require('./pornhub/api');
-const PORT_LISTENING = 5000;
+const PORT_LISTENING = process.env.PORT || 5000;
 
-server.use(function(req, res, next) {
+app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
-server.get('/', function (req, res) {
-  res.send('tg');
+app.get('/', function (req, res) {
+  res.sendFile('index.html', { root: __dirname });
 });
 
-server.get('/videos', function (req, res) {
+app.get('/videos', function (req, res) {
   const search = req.query.search;
 
   PornHub.search(search, result => {
@@ -22,7 +23,7 @@ server.get('/videos', function (req, res) {
   });
 });
 
-server.get('/nbVideo', function (req, res) {
+app.get('/nbVideo', function (req, res) {
   PornHub.getNbPornHubVideos().then(result => {
     res.send(result);
   });

@@ -58,7 +58,7 @@ const settings = {
 
 const send_search = search => {
   Loader.spin(true);
-  Ajax.get('http://localhost:3000/videos', '?search='+ search, response => {
+  Ajax.get('https://porndraw.herokuapp.com/videos', '?search='+ search, response => {
     response = JSON.parse(response);
     if (response.result.type) {
       Swal({
