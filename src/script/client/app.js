@@ -48,6 +48,7 @@ const settings = {
   });
   input_search.addEventListener('keydown', e => {
     if(e.keyCode === 13) {
+      e.preventDefault();
       send_search(input_search.value);
     }
   });
@@ -57,28 +58,37 @@ const settings = {
 })();
 
 const send_search = search => {
-  Loader.spin(true);
-  Ajax.get('https://porndraw.herokuapp.com/videos', '?search='+ search, response => {
-    response = JSON.parse(response);
-    if (response.result.type) {
-      Swal({
-        title: 'Aucun résultat 😢',
-        text: 'Ta recherche ne donne pas de résultat, recommence !',
-        type: 'warning',
-        confirmButtonText: 'Ok...'
-      });
-    } else {
-      let extract_text = '',
-        extract_thumb = [];
+  if (localStorage.getItem('draw_image') === 'false' && localStorage.getItem('draw_text') === 'false') {
+    Swal({
+      title: 'Affiche au moins un truc 🤔',
+      text: 'Tu as décoché l\'affichage des textes et des images...',
+      type: 'warning',
+      confirmButtonText: 'Ah oui je suis bête'
+    });
+  } else {
+    Loader.spin(true);
+    Ajax.get('https://porndraw.herokuapp.com/videos', '?search='+ search, response => {
+      response = JSON.parse(response);
+      if (response.result.type) {
+        Swal({
+          title: 'Aucun résultat 😢',
+          text: 'Ta recherche ne donne pas de résultat, recommence !',
+          type: 'warning',
+          confirmButtonText: 'Ok...'
+        });
+      } else {
+        let extract_text = '',
+          extract_thumb = [];
 
-      for (let i = 0; i < response.result.length; i++) {
-        extract_text += response.result[i].title +' ';
-        extract_thumb.push(response.result[i].thumb);
+        for (let i = 0; i < response.result.length; i++) {
+          extract_text += response.result[i].title +' ';
+          extract_thumb.push(response.result[i].thumb);
+        }
+        localStorage.setItem('text', extract_text);
+        localStorage.setItem('images', JSON.stringify(extract_thumb));
+        localStorage.setItem('search', response.search.toUpperCase());
+        Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY, extract_thumb);
       }
-      localStorage.setItem('text', extract_text);
-      localStorage.setItem('images', JSON.stringify(extract_thumb));
-      localStorage.setItem('search', response.search.toUpperCase());
-      Canvas.init(settings.canvas, localStorage.getItem('text'), settings.fontSize, settings.color, settings.offsetX, settings.offsetY, extract_thumb);
-    }
-  });
+    });
+  }
 };

@@ -188,6 +188,9 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
       ctx.strokeText(line[i], lineWidth, lineHeight);
       svgExport.strokeText(line[i], lineWidth, lineHeight);
     }
+    if (localStorage.getItem('draw_image') === 'false') {
+      Loader.spin(false);
+    }
   }
   if (localStorage.getItem('search') && localStorage.getItem('draw_text') === 'true') {
     let search = localStorage.getItem('search').split('');
