@@ -2,7 +2,6 @@
   "name": "porndraw",
   "version": "1.0.0",
   "description": "Draw pictures with Pornhub API",
-  "main": "src/script/app.js",
   "scripts": {
     "lint": "eslint src/**",
     "lint:fix": "eslint --fix src/**",
@@ -11,7 +10,7 @@
     "build:watch": "webpack --watch",
     "build:dev": "webpack",
     "build": "NODE_ENV=production webpack -p",
-    "build:server": "nodemon src/script/server/server.js",
+    "build:server": "nodemon src/script/server/app.js",
     "deploy": "npm run build && git add -A && git commit -nm ':rocket: deploy' && git push && git subtree push --prefix web origin gh-pages",
     "start": "npm run build:server"
   },
