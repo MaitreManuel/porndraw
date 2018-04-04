@@ -1,4 +1,5 @@
 import C2S from 'canvas2svg';
+import * as Loader from '../utils/loader';
 
 let generalCtx = '',
   secondaryCtx = '',
@@ -70,6 +71,7 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
         svgExportCtx.strokeRect(x, y, h, h);
       }
     }
+    Loader.spin(false);
   };
   const loadImage = url => {
     return new Promise((resolve, reject) => {
@@ -226,6 +228,7 @@ exports.resize = (canvas, trigger) => {
   canvas.height = document.body.clientHeight - 30;
 
   if (trigger === 'resize') {
+    Loader.spin(true);
     exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal, JSON.parse(localStorage.getItem('images')));
   }
 };

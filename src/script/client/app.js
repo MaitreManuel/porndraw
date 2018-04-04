@@ -2,8 +2,9 @@ import '../../swag/main.scss';
 
 import Swal from 'sweetalert2';
 
-import * as Canvas from './draw/canvas';
 import * as Ajax from './utils/ajax';
+import * as Canvas from './draw/canvas';
+import * as Loader from './utils/loader';
 
 const settings = {
   canvas: 'canvas',
@@ -56,6 +57,7 @@ const settings = {
 })();
 
 const send_search = search => {
+  Loader.spin(true);
   Ajax.get('http://localhost:3000/videos', '?search='+ search, response => {
     response = JSON.parse(response);
     if (response.result.type) {
