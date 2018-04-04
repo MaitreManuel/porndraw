@@ -212,6 +212,9 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
   exports.setGeneralCtx(ctx);
   exports.setSecondaryCtx(ctxImg);
   exports.setSvgExportCtx(svgExport);
+  if (!localStorage.getItem('images')) {
+    Loader.spin(false);
+  }
 };
 
 exports.getGeneralCtx = () => {
@@ -232,7 +235,11 @@ exports.resize = (canvas, trigger) => {
 
   if (trigger === 'resize') {
     Loader.spin(true);
-    exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal, JSON.parse(localStorage.getItem('images')));
+    if (localStorage.getItem('images')) {
+      exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal, JSON.parse(localStorage.getItem('images')));
+    } else {
+      exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal);
+    }
   }
 };
 
