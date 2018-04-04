@@ -53,7 +53,7 @@ const settings = {
     }
   });
   window.addEventListener('resize', () => {
-    Canvas.resize(document.querySelector('canvas'), 'resize');
+    Canvas.redraw(document.querySelector('canvas'), 'redraw');
   });
 })();
 

@@ -1,4 +1,5 @@
 import C2S from 'canvas2svg';
+import dat from 'dat.gui';
 import * as Loader from '../utils/loader';
 
 let generalCtx = '',
@@ -22,6 +23,37 @@ const params = {
   drawingColor: '#ffffff',
   isFilled: false,
 };
+
+const gui = new dat.GUI();
+gui.close();
+gui.add(params, 'steps').onChange((newValue) => {
+  params.steps = newValue;
+  exports.redraw(document.querySelector('canvas'), 'redraw');
+});
+gui.add(params, 'maxThick').onChange(newValue => {
+  params.maxThick = newValue;
+  exports.redraw(document.querySelector('canvas'), 'redraw');
+});
+gui.add(params, 'minThick').onChange(newValue => {
+  params.minThick = newValue;
+  exports.redraw(document.querySelector('canvas'), 'redraw');
+});
+gui.add(params, 'wiggleWaviness').onChange(newValue => {
+  params.wiggleWaviness = newValue;
+  exports.redraw(document.querySelector('canvas'), 'redraw');
+});
+gui.add(params, 'spiralRadius').onChange(newValue => {
+  params.spiralRadius = newValue;
+  exports.redraw(document.querySelector('canvas'), 'redraw');
+});
+gui.add(params, 'wiggleDistance').onChange(newValue => {
+  params.wiggleDistance = newValue;
+  exports.redraw(document.querySelector('canvas'), 'redraw');
+});
+gui.add(params, 'centerWidth').onChange(newValue => {
+  params.centerWidth = newValue;
+  exports.redraw(document.querySelector('canvas'), 'redraw');
+});
 
 exports.download = (filename, content) => {
   let pseudoLink = document.createElement('a');
@@ -96,8 +128,8 @@ exports.init = (canvasElem, text, fontSize, color, offsetX, offsetY, thumbs) => 
   offsetXGlobal = offsetX;
   offsetYGlobal = offsetY;
 
-  exports.resize(canvas);
-  exports.resize(canvasImg);
+  exports.redraw(canvas);
+  exports.redraw(canvasImg);
   svgExport = new C2S(ctx.canvas.width, ctx.canvas.height);
 
   ctx.font = fontSize + 'px ' + 'Courier New';
@@ -229,11 +261,11 @@ exports.getSvgExportCtx = () => {
   return svgExportCtx;
 };
 
-exports.resize = (canvas, trigger) => {
+exports.redraw = (canvas, trigger) => {
   canvas.width = (document.body.clientWidth / 2) - 30;
   canvas.height = document.body.clientHeight - 30;
 
-  if (trigger === 'resize') {
+  if (trigger === 'redraw') {
     Loader.spin(true);
     if (localStorage.getItem('images')) {
       exports.init(canvasElemGlobal, localStorage.getItem('text'), fontSizeGlobal, colorGlobal, offsetXGlobal, offsetYGlobal, JSON.parse(localStorage.getItem('images')));

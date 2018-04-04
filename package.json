@@ -50,6 +50,7 @@
   "dependencies": {
     "canvas2svg": "^1.0.16",
     "cheerio": "^1.0.0-rc.2",
+    "dat.gui": "^0.7.1",
     "express": "^4.16.3",
     "puppeteer": "^1.2.0",
     "request": "^2.85.0",
